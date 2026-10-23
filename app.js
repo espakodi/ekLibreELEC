@@ -297,6 +297,7 @@ function boot() {
   initA11y();
   initDownloads();
   initClipboardButtons();
+  initBackToTop();
 }
 
 if (document.readyState === 'loading') {
@@ -463,14 +464,14 @@ function initDownloads() {
     grid.innerHTML = filtered.map((item) => {
       const downloadUrl = `${CONFIG.baseUrl}/${item.file}`;
       return `
-        <article class="dl-card ${item.highlight ? 'highlight-card' : ''}" data-cat="${item.category}">
+        <article class="dl-card" data-cat="${item.category}">
           <div>
             <div class="dl-card-head">
               <div class="dl-title-wrap">
                 <span class="dl-icon" aria-hidden="true">${item.icon}</span>
                 <h3 class="dl-title">${item.title}</h3>
               </div>
-              <span class="dl-tag-pill ${item.highlight ? 'accent-pill' : ''}">${item.tag}</span>
+              <span class="dl-tag-pill">${item.tag}</span>
             </div>
             <p class="dl-desc" style="margin-top: 10px;">${item.desc}</p>
           </div>
@@ -633,4 +634,24 @@ function escapeHtml(str) {
     '"': '&quot;',
     "'": '&#039;',
   }[m]));
+}
+
+// --- Botón volver arriba (ir al cielo) ---
+function initBackToTop() {
+  const btn = $('#btn-back-to-top');
+  if (!btn) return;
+
+  const toggleVisibility = () => {
+    if (window.scrollY > 180) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  };
+
+  window.addEventListener('scroll', toggleVisibility, { passive: true });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  toggleVisibility();
 }
